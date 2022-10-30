@@ -21,19 +21,27 @@
  */
 #pragma once
 
+#include "src/inc/Version.h"
+
 /* you must be sure what you know what you do :) */
 #define FF_FLASHAIR_FIX
 //#define FF_RUSSIAN_FIX
 #define M907_PROTECTION
 
-/* Select one of the printers below */
+/* Select one of the printers below, only the dremel machine is allowed to use */
 //#define FF_INVENTOR_MACHINE
 //#define FF_DREAMER_MACHINE
 //#define FF_DREAMER_NX_MACHINE
-//#define FF_DREMEL_3D20_MACHINE
+#ifndef FF_DREMEL_3D20_MACHINE
+  #define FF_DREMEL_3D20_MACHINE
+#endif
+
+#if ANY(FF_INVENTOR_MACHINE, FF_DREAMER_MACHINE, FF_DREAMER_NX_MACHINE) || NONE(FF_DREMEL_3D20_MACHINE)
+  #error Only the FF_DREMEL_3D20_MACHINE is allowed/must be defined!
+#endif
 
 /* Select black or silver pulley */
-//#define FF_BLACK_PULLEY
+#define FF_BLACK_PULLEY
 //#define FF_SILVER_PULLEY
 
 #if NONE(FF_BLACK_PULLEY, FF_SILVER_PULLEY)
@@ -104,7 +112,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(Moonglow, FF Dreamer)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "gottlebek" // Who made the changes.
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -179,7 +187,11 @@
 
 // Name displayed in the LCD "Ready" message and Info menu
 #if ENABLED(FF_DREMEL_3D20_MACHINE)
-  #define CUSTOM_MACHINE_NAME "Dremel"
+  #ifdef DIRTY_SOFTWARE_VERSION
+    #define CUSTOM_MACHINE_NAME "Dremel-Laser-" __TIME__
+  #else
+    #define CUSTOM_MACHINE_NAME "Dremel-Laser"
+  #endif
 #else
   #define CUSTOM_MACHINE_NAME "FlashForge"
 #endif

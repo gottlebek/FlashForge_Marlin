@@ -7,7 +7,7 @@ build_env="FF_F407ZG"
 project_dir="Marlin"
 fw_path=$project_dir"/.pio/build/"$build_env
 fw_tool_dir="flashforge_firmware_tool"
-fw_version=$(awk '/fine SHORT_BUILD_VERSION/{ print substr($3,2,length($3)-2) }' Marlin/Marlin/Version.h)
+fw_version=$(awk '/fine SHORT_BUILD_VERSION/{ print substr($3,2,length($3)-2) }' Marlin/Marlin/src/inc/Version.h)
 build_silent="--silent"
 SIZE=arm-none-eabi-size
 
@@ -19,7 +19,7 @@ function usage()
 
    arguments:
      -h           show this help message and exit
-     -m           machine name ( nx/dreamer/inventor )
+     -m           machine name ( nx/dreamer/inventor/dremel )
      -s           swap extruders ( for dreamer and inventor machines )
      -o           use Dreamer old motherboard ( swap extruder DIR )
      -l           enable linear advance ( pressure control algo )
@@ -91,7 +91,7 @@ then
 elif [[ "$machine" == "dremel" ]]
 then
    flags+="-DFF_DREMEL_3D20_MACHINE"
-   encryption_key="flashforge123456"
+   #encryption_key="flashforge123456" #this is not needed with the noCheck BIM
 else
    usage
    exit
