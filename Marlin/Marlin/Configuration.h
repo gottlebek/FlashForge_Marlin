@@ -30,10 +30,10 @@
 //#define FF_INVENTOR_MACHINE
 //#define FF_DREAMER_MACHINE
 //#define FF_DREAMER_NX_MACHINE
-//#define FF_DREMEL_3D20_MACHINE
+#define FF_DREMEL_3D20_MACHINE
 
 /* Select black or silver pulley */
-//#define FF_BLACK_PULLEY
+#define FF_BLACK_PULLEY
 //#define FF_SILVER_PULLEY
 
 #if NONE(FF_BLACK_PULLEY, FF_SILVER_PULLEY)
@@ -104,7 +104,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(Moonglow, FF Dreamer)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "gottlebek" // Who made the changes.
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
