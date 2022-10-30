@@ -84,8 +84,11 @@
  * device. Override this if you provide public source code download. (GPLv3 requires
  * providing the source code to your customers.)
  */
+#ifndef PROJECT_NAME
+  #define PROJECT_NAME "FlashForge_Marlin"
+#endif
 #ifndef SOURCE_CODE_URL
-  #define SOURCE_CODE_URL "github.com/gottlebek/FlashForge_Marlin"
+  #define SOURCE_CODE_URL "github.com/gottlebek/" PROJECT_NAME
 #endif
 
 /**

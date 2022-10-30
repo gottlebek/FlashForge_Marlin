@@ -63,7 +63,7 @@ void GcodeSuite::M115() {
     "FIRMWARE_NAME:Marlin " DETAILED_BUILD_VERSION " (" __DATE__ " " __TIME__ ") "
     "SOURCE_CODE_URL:" SOURCE_CODE_URL " "
     #ifdef GIT_HASH
-      "GIT_HASH: " STRINGIFY(GIT_HASH) " "
+      "GIT_HASH: " GIT_HASH " "
     #endif
     "PROTOCOL_VERSION:" PROTOCOL_VERSION " "
     "MACHINE_TYPE:" MACHINE_NAME " "

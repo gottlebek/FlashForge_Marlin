@@ -557,6 +557,7 @@ namespace Language_de {
   LSTR MSG_MESH_DONE                      = _UxGT("Nivellierung fertig");
   LSTR MSG_INFO_STATS_MENU                = _UxGT("Drucker-Statistik");
   LSTR MSG_INFO_BOARD_MENU                = _UxGT("Board-Info");
+  LSTR MSG_INFO_BUILD_MENU                = _UxGT("Build info");
   LSTR MSG_INFO_THERMISTOR_MENU           = _UxGT("Thermistoren");
   LSTR MSG_INFO_EXTRUDERS                 = _UxGT("Extruder");
   LSTR MSG_INFO_BAUDRATE                  = _UxGT("Baudrate");

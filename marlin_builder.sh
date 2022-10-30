@@ -104,7 +104,7 @@ if [[ `git status --porcelain --untracked-files=no` ]]; then
    git_hash+=".1"   
 fi
 
-flags+="-DGIT_HASH="$git_hash" "
+flags+="-D__GIT_HASH=$git_hash "
 
 # build firmware
 PLATFORMIO_BUILD_FLAGS="$flags"
