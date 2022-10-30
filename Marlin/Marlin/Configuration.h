@@ -63,6 +63,9 @@
   #define FF_DREAMER_NX_MACHINE
 #endif
 
+#ifdef __GIT_HASH
+  #define GIT_HASH STRINGIFY(__GIT_HASH)
+#endif
 
 /**
  * Configuration.h

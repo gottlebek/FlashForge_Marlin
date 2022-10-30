@@ -81,25 +81,36 @@ done
 
 if [[ "$machine" == "nx" ]]
 then
-   flags+="-DFF_DREAMER_NX_MACHINE"
+   flags+="-DFF_DREAMER_NX_MACHINE "
 elif [[ "$machine" == "dreamer" ]]
 then
-   flags+="-DFF_DREAMER_MACHINE"
+   flags+="-DFF_DREAMER_MACHINE "
 elif [[ "$machine" == "inventor" ]]
 then
-   flags+="-DFF_INVENTOR_MACHINE"
+   flags+="-DFF_INVENTOR_MACHINE "
 elif [[ "$machine" == "dremel" ]]
 then
-   flags+="-DFF_DREMEL_3D20_MACHINE"
+   flags+="-DFF_DREMEL_3D20_MACHINE "
    #encryption_key="flashforge123456" #this is not needed with the noCheck BIM
 else
    usage
    exit
 fi
 
+# find out the status of the git repository but ignore untracked files
+git_hash=$(git rev-parse --short HEAD)
+if [[ `git status --porcelain --untracked-files=no` ]]; then
+   # uncommitted changes = dirty status
+   git_hash+=".1"   
+fi
+
+flags+="-D__GIT_HASH=$git_hash "
+
+# build firmware
 PLATFORMIO_BUILD_FLAGS="$flags"
 export PLATFORMIO_BUILD_FLAGS
 echo "Flags: " $PLATFORMIO_BUILD_FLAGS
+echo "git hash: " $git_hash
 echo "Clean..."
 platformio run --project-dir $project_dir --target clean -e $build_env $build_silent
 echo "Build..."
@@ -112,7 +123,7 @@ then
       $SIZE --format=berkeley $fw_path/firmware.elf
    fi
    mkdir -p "build"
-   $(pwd)/$fw_tool_dir/ff_fw_tool -k $encryption_key -e -i $fw_path/firmware.bin -o build/$machine"_"$fw_version$name_postfix"_"`date +"%m%d%Y"`".bin"
+   $(pwd)/$fw_tool_dir/ff_fw_tool -k $encryption_key -e -i $fw_path/firmware.bin -o build/$machine"_"$fw_version$name_postfix"_"`date +"%m%d%Y"`"_"$git_hash".bin"
 else
    echo "Build failed"
 fi

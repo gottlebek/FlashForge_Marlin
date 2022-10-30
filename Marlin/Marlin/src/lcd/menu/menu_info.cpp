@@ -269,6 +269,19 @@ void menu_info_board() {
     END_SCREEN();
   }
 
+  void menu_info_build() {
+    if (ui.use_click()) return ui.go_back();
+    START_SCREEN();
+    STATIC_ITEM_F(F(STRING_CONFIG_H_AUTHOR));
+    STATIC_ITEM_F(F(PROJECT_NAME));
+    STATIC_ITEM_F(F(__DATE__));
+    STATIC_ITEM_F(F(__TIME__));
+    #ifdef GIT_HASH
+      STATIC_ITEM_F(F(GIT_HASH));
+    #endif
+    END_SCREEN();
+  }
+
 #endif
 
 //
@@ -285,6 +298,7 @@ void menu_info() {
     #if HAS_EXTRUDERS
       SUBMENU(MSG_INFO_THERMISTOR_MENU, menu_info_thermistors);  // Thermistors >
     #endif
+    SUBMENU(MSG_INFO_BUILD_MENU, menu_info_build);
   #endif
 
   #if ENABLED(PRINTCOUNTER)
