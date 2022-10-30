@@ -81,16 +81,16 @@ done
 
 if [[ "$machine" == "nx" ]]
 then
-   flags+="-DFF_DREAMER_NX_MACHINE"
+   flags+="-DFF_DREAMER_NX_MACHINE "
 elif [[ "$machine" == "dreamer" ]]
 then
-   flags+="-DFF_DREAMER_MACHINE"
+   flags+="-DFF_DREAMER_MACHINE "
 elif [[ "$machine" == "inventor" ]]
 then
-   flags+="-DFF_INVENTOR_MACHINE"
+   flags+="-DFF_INVENTOR_MACHINE "
 elif [[ "$machine" == "dremel" ]]
 then
-   flags+="-DFF_DREMEL_3D20_MACHINE"
+   flags+="-DFF_DREMEL_3D20_MACHINE "
    #encryption_key="flashforge123456" #this is not needed with the noCheck BIM
 else
    usage
@@ -103,6 +103,8 @@ if [[ `git status --porcelain --untracked-files=no` ]]; then
    # uncommitted changes = dirty status
    git_hash+=".1"   
 fi
+
+flags+="-DGIT_HASH="$git_hash" "
 
 # build firmware
 PLATFORMIO_BUILD_FLAGS="$flags"
