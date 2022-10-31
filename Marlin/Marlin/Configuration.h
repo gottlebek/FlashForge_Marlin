@@ -227,10 +227,10 @@
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
-//#define I_DRIVER_TYPE  A4988
+#define I_DRIVER_TYPE  A4988
 //#define J_DRIVER_TYPE  A4988
 //#define K_DRIVER_TYPE  A4988
-#define E0_DRIVER_TYPE A4988
+//#define E0_DRIVER_TYPE A4988
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -271,7 +271,7 @@
 #if ANY(FF_INVENTOR_MACHINE, FF_DREAMER_MACHINE)
   #define EXTRUDERS 2
 #else
-  #define EXTRUDERS 1
+  #define EXTRUDERS 0
 #endif
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
@@ -935,7 +935,11 @@
 #if ANY(FF_DREAMER_MACHINE, FF_DREAMER_NX_MACHINE) 
   #define USE_ZMIN_PLUG
 #endif
-//#define USE_IMIN_PLUG
+
+#ifdef AXIS4_NAME
+  #define USE_IMIN_PLUG
+#endif
+
 //#define USE_JMIN_PLUG
 //#define USE_KMIN_PLUG
 #define USE_XMAX_PLUG
@@ -1456,16 +1460,28 @@
 #define Y_ENABLE_ON 0
 #define Z_ENABLE_ON 0
 #define E_ENABLE_ON 0 // For all extruders
-//#define I_ENABLE_ON 0
-//#define J_ENABLE_ON 0
-//#define K_ENABLE_ON 0
+
+#ifdef AXIS4_NAME
+  #define I_ENABLE_ON 0
+#endif
+
+#ifdef AXIS5_NAME
+  #define J_ENABLE_ON 0
+#endif
+
+#ifdef AXIS6_NAME
+  #define K_ENABLE_ON 0
+#endif
 
 // Disable axis steppers immediately when they're not being stepped.
 // WARNING: When motors turn off there is a chance of losing position accuracy!
 #define DISABLE_X false
 #define DISABLE_Y false
 #define DISABLE_Z false
-//#define DISABLE_I false
+
+#ifdef AXIS4_NAME
+  #define DISABLE_I false
+#endif
 //#define DISABLE_J false
 //#define DISABLE_K false
 
@@ -1483,7 +1499,11 @@
 #define INVERT_X_DIR true
 #define INVERT_Y_DIR true
 #define INVERT_Z_DIR true
-//#define INVERT_I_DIR false
+
+
+#ifdef AXIS4_NAME
+  #define INVERT_I_DIR false
+#endif
 //#define INVERT_J_DIR false
 //#define INVERT_K_DIR false
 
@@ -1542,10 +1562,15 @@
 #else
   #define Z_HOME_DIR -1
 #endif
-//#define I_HOME_DIR -1
-//#define J_HOME_DIR -1
-//#define K_HOME_DIR -1
-
+#ifdef AXIS4_NAME
+  #define I_HOME_DIR -1
+#endif
+#ifdef AXIS5_NAME
+  #define J_HOME_DIR -1
+#endif
+#ifdef AXIS6_NAME
+  #define K_HOME_DIR -1
+#endif
 // @section machine
 
 // The size of the print bed
@@ -1584,12 +1609,22 @@
 #else
   #define Z_MAX_POS 140
 #endif
-//#define I_MIN_POS 0
-//#define I_MAX_POS 50
-//#define J_MIN_POS 0
-//#define J_MAX_POS 50
-//#define K_MIN_POS 0
-//#define K_MAX_POS 50
+
+#ifdef AXIS4_NAME
+  #define I_MIN_POS 0
+  #define I_MAX_POS 50
+#endif
+
+#ifdef AXIS5_NAME
+  #define J_MIN_POS 0
+  #define J_MAX_POS 50
+#endif
+
+
+#ifdef AXIS6_NAME
+  #define K_MIN_POS 0
+  #define K_MAX_POS 50
+#endif
 
 /**
  * Software Endstops
@@ -1956,8 +1991,11 @@
 #endif
 
 // Homing speeds (mm/min)
-#define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60) }
-
+#ifdef AXIS4_NAME
+  #define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60), (8*60) }
+#else
+  #define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60) }
+#endif
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
 

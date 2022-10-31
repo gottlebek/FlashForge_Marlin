@@ -183,35 +183,36 @@ void Touch::touch(touch_control_t *control) {
     case INCREASE:  hold(control, repeat_delay - 5); TERN(AUTO_BED_LEVELING_UBL, ui.external_control ? bedlevel.encoder_diff++ : ui.encoderPosition++, ui.encoderPosition++); break;
     case DECREASE:  hold(control, repeat_delay - 5); TERN(AUTO_BED_LEVELING_UBL, ui.external_control ? bedlevel.encoder_diff-- : ui.encoderPosition--, ui.encoderPosition--); break;
     case HEATER:
-      int8_t heater;
-      heater = control->data;
-      ui.clear_lcd();
-      #if HAS_HOTEND
-        if (heater >= 0) { // HotEnd
-          #if HOTENDS == 1
-            MenuItem_int3::action(GET_TEXT_F(MSG_NOZZLE), &thermalManager.temp_hotend[0].target, 0, thermalManager.hotend_max_target(0), []{ thermalManager.start_watching_hotend(0); });
-          #else
-            MenuItemBase::itemIndex = heater;
-            MenuItem_int3::action(GET_TEXT_F(MSG_NOZZLE_N), &thermalManager.temp_hotend[heater].target, 0, thermalManager.hotend_max_target(heater), []{ thermalManager.start_watching_hotend(MenuItemBase::itemIndex); });
-          #endif
-        }
+      #if ANY(HAS_HOTEND, HAS_HEATED_BED, HAS_HEATED_CHAMBER, HAS_COOLER)
+        int8_t heater;
+        heater = control->data;
+        ui.clear_lcd();
+        #if HAS_HOTEND
+          if (heater >= 0) { // HotEnd
+            #if HOTENDS == 1
+              MenuItem_int3::action(GET_TEXT_F(MSG_NOZZLE), &thermalManager.temp_hotend[0].target, 0, thermalManager.hotend_max_target(0), []{ thermalManager.start_watching_hotend(0); });
+            #else
+              MenuItemBase::itemIndex = heater;
+              MenuItem_int3::action(GET_TEXT_F(MSG_NOZZLE_N), &thermalManager.temp_hotend[heater].target, 0, thermalManager.hotend_max_target(heater), []{ thermalManager.start_watching_hotend(MenuItemBase::itemIndex); });
+            #endif
+          }
+        #endif
+        #if HAS_HEATED_BED
+          else if (heater == H_BED) {
+            MenuItem_int3::action(GET_TEXT_F(MSG_BED), &thermalManager.temp_bed.target, 0, BED_MAX_TARGET, thermalManager.start_watching_bed);
+          }
+        #endif
+        #if HAS_HEATED_CHAMBER
+          else if (heater == H_CHAMBER) {
+            MenuItem_int3::action(GET_TEXT_F(MSG_CHAMBER), &thermalManager.temp_chamber.target, 0, CHAMBER_MAX_TARGET, thermalManager.start_watching_chamber);
+          }
+        #endif
+        #if HAS_COOLER
+          else if (heater == H_COOLER) {
+            MenuItem_int3::action(GET_TEXT_F(MSG_COOLER), &thermalManager.temp_cooler.target, 0, COOLER_MAX_TARGET, thermalManager.start_watching_cooler);
+          }
+        #endif
       #endif
-      #if HAS_HEATED_BED
-        else if (heater == H_BED) {
-          MenuItem_int3::action(GET_TEXT_F(MSG_BED), &thermalManager.temp_bed.target, 0, BED_MAX_TARGET, thermalManager.start_watching_bed);
-        }
-      #endif
-      #if HAS_HEATED_CHAMBER
-        else if (heater == H_CHAMBER) {
-          MenuItem_int3::action(GET_TEXT_F(MSG_CHAMBER), &thermalManager.temp_chamber.target, 0, CHAMBER_MAX_TARGET, thermalManager.start_watching_chamber);
-        }
-      #endif
-      #if HAS_COOLER
-        else if (heater == H_COOLER) {
-          MenuItem_int3::action(GET_TEXT_F(MSG_COOLER), &thermalManager.temp_cooler.target, 0, COOLER_MAX_TARGET, thermalManager.start_watching_cooler);
-        }
-      #endif
-
       break;
     case FAN:
       ui.clear_lcd();
@@ -225,12 +226,14 @@ void Touch::touch(touch_control_t *control) {
       MenuItem_int3::action(GET_TEXT_F(MSG_SPEED), &feedrate_percentage, 10, 999);
       break;
     case FLOWRATE:
-      ui.clear_lcd();
-      MenuItemBase::itemIndex = control->data;
-      #if EXTRUDERS == 1
-        MenuItem_int3::action(GET_TEXT_F(MSG_FLOW), &planner.flow_percentage[MenuItemBase::itemIndex], 10, 999, []{ planner.refresh_e_factor(MenuItemBase::itemIndex); });
-      #else
-        MenuItem_int3::action(GET_TEXT_F(MSG_FLOW_N), &planner.flow_percentage[MenuItemBase::itemIndex], 10, 999, []{ planner.refresh_e_factor(MenuItemBase::itemIndex); });
+      #if HAS_EXTRUDERS
+        ui.clear_lcd();
+        MenuItemBase::itemIndex = control->data;
+        #if EXTRUDERS == 1
+          MenuItem_int3::action(GET_TEXT_F(MSG_FLOW), &planner.flow_percentage[MenuItemBase::itemIndex], 10, 999, []{ planner.refresh_e_factor(MenuItemBase::itemIndex); });
+        #else
+          MenuItem_int3::action(GET_TEXT_F(MSG_FLOW_N), &planner.flow_percentage[MenuItemBase::itemIndex], 10, 999, []{ planner.refresh_e_factor(MenuItemBase::itemIndex); });
+        #endif
       #endif
       break;
 
