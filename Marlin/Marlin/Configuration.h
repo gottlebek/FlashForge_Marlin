@@ -1056,11 +1056,11 @@
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
 /**
-  *Black pulley:   X88.9 Y88.9 Z400 E96.3
+  *Black pulley:   X88.909720 Y88.909720 Z400.0 E96.275202
   *Silver pulley:  X94.1 Y94.1 Z400 E96.3
 */
 #if ENABLED(FF_BLACK_PULLEY)
-	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 96.275202/*E0*/ }
+	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 10.0/*E0/A/I*/ }
 #elif ENABLED(FF_SILVER_PULLEY)
 	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 94.139704, 94.139704, 400.0, 96.275202/*E0*/ }
 #else
@@ -1612,7 +1612,7 @@
 
 #ifdef AXIS4_NAME
   #define I_MIN_POS 0
-  #define I_MAX_POS 50
+  #define I_MAX_POS 200
 #endif
 
 #ifdef AXIS5_NAME
