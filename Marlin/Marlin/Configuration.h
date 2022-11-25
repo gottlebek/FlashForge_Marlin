@@ -1574,8 +1574,8 @@
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 230
-#define Y_BED_SIZE 150
+#define X_BED_SIZE 280 // orig: 230
+#define Y_BED_SIZE 100 // orig: 150 // reduce bed size to protect the wire from laser module
 
 #if ENABLED(FF_EXTRUDER_SWAP)
   #define FF_TOOL_OFFSET  34
