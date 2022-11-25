@@ -930,8 +930,8 @@
 // Specify here all the endstop connectors that are connected to any endstop or probe.
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
-//#define USE_XMIN_PLUG
-//#define USE_YMIN_PLUG
+#define USE_XMIN_PLUG
+#define USE_YMIN_PLUG
 #if ANY(FF_DREAMER_MACHINE, FF_DREAMER_NX_MACHINE) 
   #define USE_ZMIN_PLUG
 #endif
@@ -942,8 +942,8 @@
 
 //#define USE_JMIN_PLUG
 //#define USE_KMIN_PLUG
-#define USE_XMAX_PLUG
-#define USE_YMAX_PLUG
+//#define USE_XMAX_PLUG
+//#define USE_YMAX_PLUG
 #if ENABLED(FF_INVENTOR_MACHINE)
   #define USE_ZMAX_PLUG
 #endif
@@ -993,7 +993,7 @@
 #define X_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define Z_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
-#define I_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+#define I_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define J_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define K_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define X_MAX_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
@@ -1496,8 +1496,8 @@
 // @section machine
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-#define INVERT_X_DIR true
-#define INVERT_Y_DIR true
+#define INVERT_X_DIR false
+#define INVERT_Y_DIR false
 #define INVERT_Z_DIR true
 
 
@@ -1551,12 +1551,12 @@
 //#define Z_HOMING_HEIGHT  4      // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
                                   // Be sure to have this much clearance over your Z_MAX_POS to prevent grinding.
 
-//#define Z_AFTER_HOMING  10      // (mm) Height to move to after homing Z
+#define Z_AFTER_HOMING  Z_MAX_POS      // (mm) Height to move to after homing Z
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
-#define X_HOME_DIR  1
-#define Y_HOME_DIR  1
+#define X_HOME_DIR  -1
+#define Y_HOME_DIR  -1
 #if ENABLED(FF_INVENTOR_MACHINE)
   #define Z_HOME_DIR  1
 #else
@@ -1595,10 +1595,10 @@
   #define X_MIN_POS  (-113.00-FF_TOOL_OFFSET)
   #define Y_MIN_POS    -79.99
 #elif ENABLED(FF_DREAMER_NX_MACHINE)
-  #define X_MAX_POS    158.50
-  #define Y_MAX_POS     76.23
-  #define X_MIN_POS   -111.00
-  #define Y_MIN_POS    -76.23
+  #define X_MAX_POS     X_BED_SIZE // orig: 158.50
+  #define Y_MAX_POS     Y_BED_SIZE // orig: 76.23
+  #define X_MIN_POS     0.0 // orig: -111.00
+  #define Y_MIN_POS     0.0 // orig: -76.23
 #else
   #error Invalid printer model selection
 #endif
@@ -1983,16 +1983,16 @@
  * - Allows Z homing only when XY positions are known and trusted.
  * - If stepper drivers sleep, XY homing may be required again before Z homing.
  */
-//#define Z_SAFE_HOMING
+#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing
-  #define Z_SAFE_HOMING_Y_POINT Y_CENTER  // Y point for Z homing
+  #define Z_SAFE_HOMING_X_POINT X_MIN_POS  // X point for Z homing
+  #define Z_SAFE_HOMING_Y_POINT Y_MIN_POS  // Y point for Z homing
 #endif
 
 // Homing speeds (mm/min)
 #ifdef AXIS4_NAME
-  #define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60), (8*60) }
+  #define HOMING_FEEDRATE_MM_M { (40*60), (40*60), (8*60), (8*60) }
 #else
   #define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60) }
 #endif
