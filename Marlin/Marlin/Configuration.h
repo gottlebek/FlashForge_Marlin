@@ -1058,9 +1058,11 @@
 /**
   *Black pulley:   X88.909720 Y88.909720 Z400.0 E96.275202
   *Silver pulley:  X94.1 Y94.1 Z400 E96.3
+
+  see more: https://github.com/LightBurnSoftware/Documentation/blob/master/RotarySetup.md
 */
 #if ENABLED(FF_BLACK_PULLEY)
-	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 10.0/*E0/A/I*/ }
+	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 8.888888/*E0/A/I*/ }  // Rotation Axis: (200 * (16) microSteps) / 360 = steps per degree
 #elif ENABLED(FF_SILVER_PULLEY)
 	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 94.139704, 94.139704, 400.0, 96.275202/*E0*/ }
 #else
@@ -1071,7 +1073,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 20, 27 }
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 20, 180 } // for I: degree per second
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1410,12 +1412,12 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   10 // Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points
-#define Z_CLEARANCE_MULTI_PROBE     5 // Z Clearance between multiple probes
+#define Z_CLEARANCE_DEPLOY_PROBE   0 // Z Clearance for Deploy/Stow
+#define Z_CLEARANCE_BETWEEN_PROBES  0 // Z Clearance between probe points
+#define Z_CLEARANCE_MULTI_PROBE     0 // Z Clearance between multiple probes
 //#define Z_AFTER_PROBING           5 // Z position after probing is done
 
-#define Z_PROBE_LOW_POINT          -2 // Farthest distance below the trigger-point to go before stopping
+#define Z_PROBE_LOW_POINT          0 // Farthest distance below the trigger-point to go before stopping
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
@@ -1611,8 +1613,8 @@
 #endif
 
 #ifdef AXIS4_NAME
-  #define I_MIN_POS 0
-  #define I_MAX_POS 200
+  #define I_MIN_POS 0     // degree
+  #define I_MAX_POS 540   // degree
 #endif
 
 #ifdef AXIS5_NAME
@@ -1992,7 +1994,7 @@
 
 // Homing speeds (mm/min)
 #ifdef AXIS4_NAME
-  #define HOMING_FEEDRATE_MM_M { (40*60), (40*60), (8*60), (8*60) }
+  #define HOMING_FEEDRATE_MM_M { (40*60), (40*60), (8*60), (90 * 60) } // for I-Axis: Degree per minute
 #else
   #define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60) }
 #endif
