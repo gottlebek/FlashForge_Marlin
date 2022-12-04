@@ -171,8 +171,9 @@
   #define Z_MAX_BED (Z_MAX_POS)
 #endif
 #if HAS_I_AXIS
-  #define I_MINIM (I_CENTER - _I_HALF_BED_SIZE)
+  #define I_MINIM (I_CENTER - _I_HALF_IMAX)
   #define I_MAXIM (I_MINIM + I_BED_SIZE)
+  #define I_MAX_BED I_MAXIM
 #endif
 #if HAS_J_AXIS
   #define J_MINIM (J_CENTER - _J_HALF_BED_SIZE)

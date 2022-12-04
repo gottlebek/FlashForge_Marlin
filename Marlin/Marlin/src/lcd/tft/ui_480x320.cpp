@@ -308,15 +308,16 @@ void MarlinUI::draw_status_screen() {
   TERN_(TOUCH_SCREEN, touch.add_control(FEEDRATE, 96, 176, 100, 32));
 
   // flow rate
-  tft.canvas(284, y, 100, 32);
-  tft.set_background(COLOR_BACKGROUND);
-  color = planner.flow_percentage[0] == 100 ? COLOR_RATE_100 : COLOR_RATE_ALTERED;
-  tft.add_image(0, 0, imgFlowRate, color);
-  tft_string.set(i16tostr3rj(planner.flow_percentage[active_extruder]));
-  tft_string.add('%');
-  tft.add_text(36, 1, color , tft_string);
-  TERN_(TOUCH_SCREEN, touch.add_control(FLOWRATE, 284, 176, 100, 32, active_extruder));
-
+  #if HAS_EXTRUDER
+    tft.canvas(284, y, 100, 32);
+    tft.set_background(COLOR_BACKGROUND);
+    color = planner.flow_percentage[0] == 100 ? COLOR_RATE_100 : COLOR_RATE_ALTERED;
+    tft.add_image(0, 0, imgFlowRate, color);
+    tft_string.set(i16tostr3rj(planner.flow_percentage[active_extruder]));
+    tft_string.add('%');
+    tft.add_text(36, 1, color , tft_string);
+    TERN_(TOUCH_SCREEN, touch.add_control(FLOWRATE, 284, 176, 100, 32, active_extruder));
+  #endif
   #if ENABLED(TOUCH_SCREEN)
     add_control(404, y, menu_main, imgSettings);
     TERN_(SDSUPPORT, add_control(12, y, menu_media, imgSD, !printingIsActive(), COLOR_CONTROL_ENABLED, card.isMounted() && printingIsActive() ? COLOR_BUSY : COLOR_CONTROL_DISABLED));
@@ -644,7 +645,9 @@ static void drawAxisValue(const AxisEnum axis) {
     case X_AXIS: pos = motionAxisState.xValuePos; color = X_BTN_COLOR; break;
     case Y_AXIS: pos = motionAxisState.yValuePos; color = Y_BTN_COLOR; break;
     case Z_AXIS: pos = motionAxisState.zValuePos; color = Z_BTN_COLOR; break;
-    case E_AXIS: pos = motionAxisState.eValuePos; color = E_BTN_COLOR; break;
+    #if HAS_EXTRUDERS
+      case E_AXIS: pos = motionAxisState.eValuePos; color = E_BTN_COLOR; break;
+    #endif
     default: return;
   }
   tft.canvas(pos.x, pos.y, BTN_WIDTH + X_MARGIN, BTN_HEIGHT);
@@ -735,8 +738,10 @@ static void moveAxis(const AxisEnum axis, const int8_t direction) {
   drawAxisValue(axis);
 }
 
-static void e_plus()  { moveAxis(E_AXIS, 1);  }
-static void e_minus() { moveAxis(E_AXIS, -1); }
+#if HAS_EXTRUDERS
+  static void e_plus()  { moveAxis(E_AXIS, 1);  }
+  static void e_minus() { moveAxis(E_AXIS, -1); }
+#endif
 static void x_minus() { moveAxis(X_AXIS, -1); }
 static void x_plus()  { moveAxis(X_AXIS, 1);  }
 static void y_plus()  { moveAxis(Y_AXIS, 1);  }
@@ -753,7 +758,9 @@ static void z_minus() { moveAxis(Z_AXIS, -1); }
 
     quick_feedback();
     drawCurESelection();
-    drawAxisValue(E_AXIS);
+    #if HAS_EXTRUDERS
+      drawAxisValue(E_AXIS);
+    #endif
   }
 
   static void do_home() {
@@ -762,7 +769,9 @@ static void z_minus() { moveAxis(Z_AXIS, -1); }
     queue.inject_P(G28_STR);
     // Disable touch until home is done
     TERN_(HAS_TFT_XPT2046, touch.disable());
-    drawAxisValue(E_AXIS);
+    #if HAS_EXTRUDERS
+      drawAxisValue(E_AXIS);
+    #endif
     drawAxisValue(X_AXIS);
     drawAxisValue(Y_AXIS);
     drawAxisValue(Z_AXIS);
@@ -832,8 +841,10 @@ void MarlinUI::move_axis_screen() {
   // ROW 1 -> E- Y- CurY Z+
   int x = X_MARGIN, y = Y_MARGIN, spacing = 0;
 
-  drawBtn(x, y, "E+", (intptr_t)e_plus, imgUp, E_BTN_COLOR, !busy);
-
+  #if HAS_EXTRUDERS
+    drawBtn(x, y, "E+", (intptr_t)e_plus, imgUp, E_BTN_COLOR, !busy);
+  #endif
+  
   spacing = (TFT_WIDTH - X_MARGIN * 2 - 3 * BTN_WIDTH) / 2;
   x += BTN_WIDTH + spacing;
   drawBtn(x, y, "Y+", (intptr_t)y_plus, imgUp, Y_BTN_COLOR, !busy);
@@ -880,12 +891,16 @@ void MarlinUI::move_axis_screen() {
   x = X_MARGIN;
   spacing = (TFT_WIDTH - X_MARGIN * 2 - 3 * BTN_WIDTH) / 2;
 
-  drawBtn(x, y, "E-", (intptr_t)e_minus, imgDown, E_BTN_COLOR, !busy);
+  #if HAS_EXTRUDERS
+    drawBtn(x, y, "E-", (intptr_t)e_minus, imgDown, E_BTN_COLOR, !busy);
+  #endif
 
   // Cur E
   motionAxisState.eValuePos.x = x;
   motionAxisState.eValuePos.y = y + BTN_HEIGHT + 2;
-  drawAxisValue(E_AXIS);
+  #if HAS_EXTRUDERS
+    drawAxisValue(E_AXIS);
+  #endif
 
   // Cur X
   motionAxisState.xValuePos.x = BTN_WIDTH + (TFT_WIDTH - X_MARGIN * 2 - 5 * BTN_WIDTH) / 4; //X- pos

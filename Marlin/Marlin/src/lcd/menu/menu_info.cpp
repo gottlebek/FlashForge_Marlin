@@ -95,6 +95,7 @@
 //
 // About Printer > Thermistors
 //
+#if HAS_EXTRUDERS
 void menu_info_thermistors() {
   if (ui.use_click()) return ui.go_back();
 
@@ -211,7 +212,7 @@ void menu_info_thermistors() {
 
   END_SCREEN();
 }
-
+#endif
 //
 // About Printer > Board Info
 //
