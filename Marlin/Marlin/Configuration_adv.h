@@ -1827,7 +1827,7 @@
   //#define LCD_LANGUAGE_2 fi
   //#define LCD_LANGUAGE_3 ru
 #else
-  #define LCD_LANGUAGE_2 ru
+  #define LCD_LANGUAGE_2 de
 #endif
   //#define LCD_LANGUAGE_4 es
   //#define LCD_LANGUAGE_5 it
