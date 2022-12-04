@@ -1562,7 +1562,7 @@
 #if ENABLED(FF_INVENTOR_MACHINE)
   #define Z_HOME_DIR  1
 #else
-  #define Z_HOME_DIR -1
+  #define Z_HOME_DIR 0
 #endif
 #ifdef AXIS4_NAME
   #define I_HOME_DIR -1
