@@ -108,13 +108,12 @@ thermosensor K-couple ADS1118
 //
 // Limit Switches
 //
-#define X_MIN_PIN                           PE2
-#define X_MAX_PIN                           PF3
-#define Y_MIN_PIN                           PE3
-#define Y_MAX_PIN                           PF2
-#define Z_MIN_PIN                           PE4
-#define Z_MAX_PIN                           PF1
-
+#define X_MIN_PIN                           PF3 // orig: PE2
+#define X_MAX_PIN                           PE2 // orig: PF3
+#define Y_MIN_PIN                           PF2 // orig: PE3
+#define Y_MAX_PIN                           PE3 // orig: PF2
+#define Z_MIN_PIN                           PE4 // orig: PE4
+#define Z_MAX_PIN                           PF1 // orig: PF1
 
 #ifndef Z_MIN_PROBE_PIN
   #define Z_MIN_PROBE_PIN  Z_MIN_PIN
@@ -150,6 +149,13 @@ thermosensor K-couple ADS1118
 #define E1_STEP_PIN                         PF8
 #define E1_DIR_PIN                          PF7
 #define E1_ENABLE_PIN                       PF9
+#endif
+
+#ifdef AXIS4_NAME
+  #define I_STEP_PIN                        E0_STEP_PIN
+  #define I_DIR_PIN                         E0_DIR_PIN
+  #define I_ENABLE_PIN                      E0_ENABLE_PIN
+  #define I_MIN_PIN                         E1_DIR_PIN
 #endif
 
 
@@ -246,4 +252,9 @@ thermosensor K-couple ADS1118
 #define SPI_FLASH_MOSI_PIN  MOSI_PIN
 #define SPI_FLASH_SCK_PIN   SCK_PIN
 #define SPI_FLASH_CS_PIN    PB12
+#endif
+
+#if ENABLED(SPINDLE_LASER_USE_PWM)
+  #define SPINDLE_LASER_PWM_PIN E1_STEP_PIN
+  #define SPINDLE_LASER_ENA_PIN E1_ENABLE_PIN
 #endif

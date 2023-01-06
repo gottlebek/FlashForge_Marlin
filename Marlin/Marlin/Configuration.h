@@ -21,19 +21,27 @@
  */
 #pragma once
 
+#include "src/inc/Version.h"
+
 /* you must be sure what you know what you do :) */
 #define FF_FLASHAIR_FIX
 //#define FF_RUSSIAN_FIX
 #define M907_PROTECTION
 
-/* Select one of the printers below */
+/* Select one of the printers below, only the dremel machine is allowed to use */
 //#define FF_INVENTOR_MACHINE
 //#define FF_DREAMER_MACHINE
 //#define FF_DREAMER_NX_MACHINE
-//#define FF_DREMEL_3D20_MACHINE
+#ifndef FF_DREMEL_3D20_MACHINE
+  #define FF_DREMEL_3D20_MACHINE
+#endif
+
+#if ANY(FF_INVENTOR_MACHINE, FF_DREAMER_MACHINE, FF_DREAMER_NX_MACHINE) || NONE(FF_DREMEL_3D20_MACHINE)
+  #error Only the FF_DREMEL_3D20_MACHINE is allowed/must be defined!
+#endif
 
 /* Select black or silver pulley */
-//#define FF_BLACK_PULLEY
+#define FF_BLACK_PULLEY
 //#define FF_SILVER_PULLEY
 
 #if NONE(FF_BLACK_PULLEY, FF_SILVER_PULLEY)
@@ -55,6 +63,9 @@
   #define FF_DREAMER_NX_MACHINE
 #endif
 
+#ifdef __GIT_HASH
+  #define GIT_HASH STRINGIFY(__GIT_HASH)
+#endif
 
 /**
  * Configuration.h
@@ -104,7 +115,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(Moonglow, FF Dreamer)" // Who made the changes.
+#define STRING_CONFIG_H_AUTHOR "gottlebek" // Who made the changes.
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -179,7 +190,11 @@
 
 // Name displayed in the LCD "Ready" message and Info menu
 #if ENABLED(FF_DREMEL_3D20_MACHINE)
-  #define CUSTOM_MACHINE_NAME "Dremel"
+  #ifdef DIRTY_SOFTWARE_VERSION
+    #define CUSTOM_MACHINE_NAME "Dremel-Laser-" __TIME__
+  #else
+    #define CUSTOM_MACHINE_NAME "Dremel-Laser"
+  #endif
 #else
   #define CUSTOM_MACHINE_NAME "FlashForge"
 #endif
@@ -212,10 +227,10 @@
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
-//#define I_DRIVER_TYPE  A4988
+#define I_DRIVER_TYPE  TMC2209_STANDALONE
 //#define J_DRIVER_TYPE  A4988
 //#define K_DRIVER_TYPE  A4988
-#define E0_DRIVER_TYPE A4988
+//#define E0_DRIVER_TYPE A4988
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -256,7 +271,7 @@
 #if ANY(FF_INVENTOR_MACHINE, FF_DREAMER_MACHINE)
   #define EXTRUDERS 2
 #else
-  #define EXTRUDERS 1
+  #define EXTRUDERS 0
 #endif
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
@@ -915,16 +930,20 @@
 // Specify here all the endstop connectors that are connected to any endstop or probe.
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
-//#define USE_XMIN_PLUG
-//#define USE_YMIN_PLUG
+#define USE_XMIN_PLUG
+#define USE_YMIN_PLUG
 #if ANY(FF_DREAMER_MACHINE, FF_DREAMER_NX_MACHINE) 
   #define USE_ZMIN_PLUG
 #endif
-//#define USE_IMIN_PLUG
+
+#ifdef AXIS4_NAME
+  #define USE_IMIN_PLUG
+#endif
+
 //#define USE_JMIN_PLUG
 //#define USE_KMIN_PLUG
-#define USE_XMAX_PLUG
-#define USE_YMAX_PLUG
+//#define USE_XMAX_PLUG
+//#define USE_YMAX_PLUG
 #if ENABLED(FF_INVENTOR_MACHINE)
   #define USE_ZMAX_PLUG
 #endif
@@ -974,7 +993,7 @@
 #define X_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define Z_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
-#define I_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+#define I_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
 #define J_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define K_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define X_MAX_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
@@ -1037,11 +1056,13 @@
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
 /**
-  *Black pulley:   X88.9 Y88.9 Z400 E96.3
+  *Black pulley:   X88.909720 Y88.909720 Z400.0 E96.275202
   *Silver pulley:  X94.1 Y94.1 Z400 E96.3
+
+  see more: https://github.com/LightBurnSoftware/Documentation/blob/master/RotarySetup.md
 */
 #if ENABLED(FF_BLACK_PULLEY)
-	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 96.275202/*E0*/ }
+	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 35.55555/*E0/A/I*/ }  // Rotation Axis: (200 * (64) microSteps) / 360 = steps per degree
 #elif ENABLED(FF_SILVER_PULLEY)
 	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 94.139704, 94.139704, 400.0, 96.275202/*E0*/ }
 #else
@@ -1052,7 +1073,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 20, 27 }
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 20, 180 } // for I: degree per second
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1391,12 +1412,12 @@
  * Example: `M851 Z-5` with a CLEARANCE of 4  =>  9mm from bed to nozzle.
  *     But: `M851 Z+1` with a CLEARANCE of 2  =>  2mm from bed to nozzle.
  */
-#define Z_CLEARANCE_DEPLOY_PROBE   10 // Z Clearance for Deploy/Stow
-#define Z_CLEARANCE_BETWEEN_PROBES  5 // Z Clearance between probe points
-#define Z_CLEARANCE_MULTI_PROBE     5 // Z Clearance between multiple probes
+#define Z_CLEARANCE_DEPLOY_PROBE   0 // Z Clearance for Deploy/Stow
+#define Z_CLEARANCE_BETWEEN_PROBES  0 // Z Clearance between probe points
+#define Z_CLEARANCE_MULTI_PROBE     0 // Z Clearance between multiple probes
 //#define Z_AFTER_PROBING           5 // Z position after probing is done
 
-#define Z_PROBE_LOW_POINT          -2 // Farthest distance below the trigger-point to go before stopping
+#define Z_PROBE_LOW_POINT          0 // Farthest distance below the trigger-point to go before stopping
 
 // For M851 give a range for adjusting the Z probe offset
 #define Z_PROBE_OFFSET_RANGE_MIN -20
@@ -1441,16 +1462,28 @@
 #define Y_ENABLE_ON 0
 #define Z_ENABLE_ON 0
 #define E_ENABLE_ON 0 // For all extruders
-//#define I_ENABLE_ON 0
-//#define J_ENABLE_ON 0
-//#define K_ENABLE_ON 0
+
+#ifdef AXIS4_NAME
+  #define I_ENABLE_ON 0
+#endif
+
+#ifdef AXIS5_NAME
+  #define J_ENABLE_ON 0
+#endif
+
+#ifdef AXIS6_NAME
+  #define K_ENABLE_ON 0
+#endif
 
 // Disable axis steppers immediately when they're not being stepped.
 // WARNING: When motors turn off there is a chance of losing position accuracy!
 #define DISABLE_X false
 #define DISABLE_Y false
 #define DISABLE_Z false
-//#define DISABLE_I false
+
+#ifdef AXIS4_NAME
+  #define DISABLE_I false
+#endif
 //#define DISABLE_J false
 //#define DISABLE_K false
 
@@ -1465,10 +1498,14 @@
 // @section machine
 
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
-#define INVERT_X_DIR true
-#define INVERT_Y_DIR true
+#define INVERT_X_DIR false
+#define INVERT_Y_DIR false
 #define INVERT_Z_DIR true
-//#define INVERT_I_DIR false
+
+
+#ifdef AXIS4_NAME
+  #define INVERT_I_DIR false
+#endif
 //#define INVERT_J_DIR false
 //#define INVERT_K_DIR false
 
@@ -1516,26 +1553,31 @@
 //#define Z_HOMING_HEIGHT  4      // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
                                   // Be sure to have this much clearance over your Z_MAX_POS to prevent grinding.
 
-//#define Z_AFTER_HOMING  10      // (mm) Height to move to after homing Z
+#define Z_AFTER_HOMING  Z_MAX_POS      // (mm) Height to move to after homing Z
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
-#define X_HOME_DIR  1
-#define Y_HOME_DIR  1
+#define X_HOME_DIR  -1
+#define Y_HOME_DIR  -1
 #if ENABLED(FF_INVENTOR_MACHINE)
   #define Z_HOME_DIR  1
 #else
-  #define Z_HOME_DIR -1
+  #define Z_HOME_DIR 0
 #endif
-//#define I_HOME_DIR -1
-//#define J_HOME_DIR -1
-//#define K_HOME_DIR -1
-
+#ifdef AXIS4_NAME
+  #define I_HOME_DIR -1
+#endif
+#ifdef AXIS5_NAME
+  #define J_HOME_DIR -1
+#endif
+#ifdef AXIS6_NAME
+  #define K_HOME_DIR -1
+#endif
 // @section machine
 
 // The size of the print bed
-#define X_BED_SIZE 230
-#define Y_BED_SIZE 150
+#define X_BED_SIZE 280 // orig: 230
+#define Y_BED_SIZE 100 // orig: 150 // reduce bed size to protect the wire from laser module
 
 #if ENABLED(FF_EXTRUDER_SWAP)
   #define FF_TOOL_OFFSET  34
@@ -1555,10 +1597,10 @@
   #define X_MIN_POS  (-113.00-FF_TOOL_OFFSET)
   #define Y_MIN_POS    -79.99
 #elif ENABLED(FF_DREAMER_NX_MACHINE)
-  #define X_MAX_POS    158.50
-  #define Y_MAX_POS     76.23
-  #define X_MIN_POS   -111.00
-  #define Y_MIN_POS    -76.23
+  #define X_MAX_POS     X_BED_SIZE // orig: 158.50
+  #define Y_MAX_POS     Y_BED_SIZE // orig: 76.23
+  #define X_MIN_POS     0.0 // orig: -111.00
+  #define Y_MIN_POS     0.0 // orig: -76.23
 #else
   #error Invalid printer model selection
 #endif
@@ -1569,12 +1611,22 @@
 #else
   #define Z_MAX_POS 140
 #endif
-//#define I_MIN_POS 0
-//#define I_MAX_POS 50
-//#define J_MIN_POS 0
-//#define J_MAX_POS 50
-//#define K_MIN_POS 0
-//#define K_MAX_POS 50
+
+#ifdef AXIS4_NAME
+  #define I_MIN_POS 0     // degree
+  #define I_MAX_POS 540   // degree
+#endif
+
+#ifdef AXIS5_NAME
+  #define J_MIN_POS 0
+  #define J_MAX_POS 50
+#endif
+
+
+#ifdef AXIS6_NAME
+  #define K_MIN_POS 0
+  #define K_MAX_POS 50
+#endif
 
 /**
  * Software Endstops
@@ -1730,7 +1782,7 @@
 //#define AUTO_BED_LEVELING_LINEAR
 //#define AUTO_BED_LEVELING_BILINEAR
 //#define AUTO_BED_LEVELING_UBL
-#define MESH_BED_LEVELING
+//#define MESH_BED_LEVELING
 
 /**
  * Normally G28 leaves leveling disabled on completion. Enable one of
@@ -1859,7 +1911,7 @@
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-#define LCD_BED_LEVELING
+//#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MESH_EDIT_Z_STEP  0.025 // (mm) Step size while manually probing Z axis.
@@ -1868,7 +1920,7 @@
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
-#define LCD_BED_TRAMMING
+//#define LCD_BED_TRAMMING
 
 #if ENABLED(LCD_BED_TRAMMING)
   #if ANY(FF_DREAMER_MACHINE, FF_INVENTOR_MACHINE)
@@ -1933,16 +1985,19 @@
  * - Allows Z homing only when XY positions are known and trusted.
  * - If stepper drivers sleep, XY homing may be required again before Z homing.
  */
-//#define Z_SAFE_HOMING
+#define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing
-  #define Z_SAFE_HOMING_Y_POINT Y_CENTER  // Y point for Z homing
+  #define Z_SAFE_HOMING_X_POINT X_MIN_POS  // X point for Z homing
+  #define Z_SAFE_HOMING_Y_POINT Y_MIN_POS  // Y point for Z homing
 #endif
 
 // Homing speeds (mm/min)
-#define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60) }
-
+#ifdef AXIS4_NAME
+  #define HOMING_FEEDRATE_MM_M { (40*60), (40*60), (8*60), (90 * 60) } // for I-Axis: Degree per minute
+#else
+  #define HOMING_FEEDRATE_MM_M { (50*60), (50*60), (8*60) }
+#endif
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
 
@@ -2079,7 +2134,7 @@
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z_raise }
-  #define NOZZLE_PARK_POINT { (X_MAX_POS - 10), (Y_MIN_POS + 10), 0 }
+  #define NOZZLE_PARK_POINT { (X_MIN_POS), (Y_MIN_POS), 0 }
   #define NOZZLE_PARK_MOVE          0   // Park motion: 0 = XY Move, 1 = X Only, 2 = Y Only, 3 = X before Y, 4 = Y before X
   #define NOZZLE_PARK_Z_RAISE_MIN   2   // (mm) Always raise Z by at least this distance
   #define NOZZLE_PARK_XY_FEEDRATE 100   // (mm/s) X and Y axes feedrate (also used for delta Z axis)

@@ -21,11 +21,14 @@
  */
 #pragma once
 
+/* Select this if it isn't a release build. */
+//#define DIRTY_SOFTWARE_VERSION
+
 /**
  * Release version. Leave the Marlin version or apply a custom scheme.
  */
 #ifndef SHORT_BUILD_VERSION
-  #define SHORT_BUILD_VERSION "2.0.9.4"
+  #define SHORT_BUILD_VERSION "2.0.9.4-gottlebek"
 #endif
 
 /**
@@ -81,8 +84,11 @@
  * device. Override this if you provide public source code download. (GPLv3 requires
  * providing the source code to your customers.)
  */
+#ifndef PROJECT_NAME
+  #define PROJECT_NAME "FlashForge_Marlin"
+#endif
 #ifndef SOURCE_CODE_URL
-  #define SOURCE_CODE_URL "github.com/MarlinFirmware/Marlin"
+  #define SOURCE_CODE_URL "github.com/gottlebek/" PROJECT_NAME
 #endif
 
 /**
@@ -97,7 +103,7 @@
    * documentation about a specific Marlin release. Displayed in the Info Menu.
    */
 #ifndef WEBSITE_URL
-  #define WEBSITE_URL "marlinfw.org"
+  #define WEBSITE_URL "github.com/moonglow/FlashForge_Marlin"
 #endif
 
 /**
