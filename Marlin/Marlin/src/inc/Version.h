@@ -22,7 +22,7 @@
 #pragma once
 
 /* Select this if it isn't a release build. */
-#define DIRTY_SOFTWARE_VERSION
+//#define DIRTY_SOFTWARE_VERSION
 
 /**
  * Release version. Leave the Marlin version or apply a custom scheme.
