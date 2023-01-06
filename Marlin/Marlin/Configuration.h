@@ -227,7 +227,7 @@
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
-#define I_DRIVER_TYPE  A4988
+#define I_DRIVER_TYPE  TMC2209_STANDALONE
 //#define J_DRIVER_TYPE  A4988
 //#define K_DRIVER_TYPE  A4988
 //#define E0_DRIVER_TYPE A4988
@@ -1062,7 +1062,7 @@
   see more: https://github.com/LightBurnSoftware/Documentation/blob/master/RotarySetup.md
 */
 #if ENABLED(FF_BLACK_PULLEY)
-	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 8.888888/*E0/A/I*/ }  // Rotation Axis: (200 * (16) microSteps) / 360 = steps per degree
+	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 35.55555/*E0/A/I*/ }  // Rotation Axis: (200 * (64) microSteps) / 360 = steps per degree
 #elif ENABLED(FF_SILVER_PULLEY)
 	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 94.139704, 94.139704, 400.0, 96.275202/*E0*/ }
 #else
