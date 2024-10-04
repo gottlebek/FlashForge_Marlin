@@ -1,0 +1,2 @@
+# binaries in the build directory
+/build/*.bin

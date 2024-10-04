@@ -1063,6 +1063,7 @@
 */
 #if ENABLED(FF_BLACK_PULLEY)
 	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 35.55555/*E0/A/I*/ }  // Rotation Axis: (200 * (64) microSteps) / 360 = steps per degree
+  // rotation axis chuck type: 35.55555
 #elif ENABLED(FF_SILVER_PULLEY)
 	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 94.139704, 94.139704, 400.0, 96.275202/*E0*/ }
 #else
@@ -1565,7 +1566,7 @@
   #define Z_HOME_DIR 0
 #endif
 #ifdef AXIS4_NAME
-  #define I_HOME_DIR -1
+  #define I_HOME_DIR 0
 #endif
 #ifdef AXIS5_NAME
   #define J_HOME_DIR -1
@@ -1974,7 +1975,7 @@
 //#define MANUAL_X_HOME_POS 0
 //#define MANUAL_Y_HOME_POS 0
 //#define MANUAL_Z_HOME_POS 0
-//#define MANUAL_I_HOME_POS 0
+#define MANUAL_I_HOME_POS 0
 //#define MANUAL_J_HOME_POS 0
 //#define MANUAL_K_HOME_POS 0
 
