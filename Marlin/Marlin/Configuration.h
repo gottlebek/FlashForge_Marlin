@@ -1062,7 +1062,7 @@
   see more: https://github.com/LightBurnSoftware/Documentation/blob/master/RotarySetup.md
 */
 #if ENABLED(FF_BLACK_PULLEY)
-	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 35.55555/*E0/A/I*/ }  // Rotation Axis: (200 * (64) microSteps) / 360 = steps per degree
+	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 88.909720, 88.909720, 400.0, 8.88888/*E0/A/I*/ }  // Rotation Axis: (200 * (64) microSteps) / 360 = steps per degree
   // rotation axis chuck type: 35.55555
 #elif ENABLED(FF_SILVER_PULLEY)
 	#define DEFAULT_AXIS_STEPS_PER_UNIT   { 94.139704, 94.139704, 400.0, 96.275202/*E0*/ }
@@ -1074,7 +1074,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 300, 300, 20, 180 } // for I: degree per second
+#define DEFAULT_MAX_FEEDRATE          { 300, 300, 20, 360 } // for I: degree per second for rotation axis chuck type 180
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
