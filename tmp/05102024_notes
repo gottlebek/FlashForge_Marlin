@@ -1,0 +1,24 @@
+Arbeitsbereich X-Max 213.5mm
+M203 A5000
+M201 X1000
+
+D mit folie 94,9
+
+Schnelle reine Rotation 1600 mm/s
+
+X-Limit auf 50 setzen: M203 X50
+
+Karlo1 Folienbegin bei X210.5
+Karlo2 Folienbegin bei X212.912
+
+Gcode-Start:
+M203 X200; Max Feedrate
+M201 X1000; Max Acceleration
+G0 X0 Y0 F8000; Fahre auf 0
+G28 X Y; Homing
+G0 X196 Y100 F8000; Go Fast to Start point
+G92 A843; Set Position
+M203 X50; Max Feedrate
+M201 X100; Max Acceleration
+
+Für Deckel-Gravieren: Y-Bedsize in der Firmware Y=150 setzen.
